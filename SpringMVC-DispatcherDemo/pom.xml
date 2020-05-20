@@ -31,13 +31,13 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-web</artifactId>
-			<version>5.2.2.RELEASE</version>
+			<version>5.2.5.RELEASE</version>
 		</dependency>
 		<!-- Enable Web MVC -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
-			<version>5.2.2.RELEASE</version>
+			<version>5.2.5.RELEASE</version>
 		</dependency>
 		<!-- Object Mapper -->
 		<dependency>
