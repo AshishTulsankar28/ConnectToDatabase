@@ -2,7 +2,8 @@ package config;
 
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -20,7 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @EnableWebMvc
 @ComponentScan({"config","services","controllers"})
 public class CustomConfig implements WebMvcConfigurer{
-	Logger logger = Logger.getLogger(CustomConfig.class);
+	Logger logger=LogManager.getLogger();
 	
 	public void addViewControllers(ViewControllerRegistry viewCtrlRegistry) {
 		logger.info("WEBSERVER - addViewControllers");

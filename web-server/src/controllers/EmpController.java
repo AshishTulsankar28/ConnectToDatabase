@@ -3,7 +3,9 @@
  */
 package controllers;
 
-import org.apache.log4j.Logger;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +22,7 @@ import views.ResponseVM;
 @RestController
 public class EmpController extends WebController{
 
-	Logger logger=Logger.getLogger(EmpController.class);
+	Logger logger=LogManager.getLogger();
 
 	@Autowired
 	EmpService empService;
@@ -30,10 +32,11 @@ public class EmpController extends WebController{
 	//		 *  but it will prevent view from rendering 
 	//		 *  & will execute the function written in below method
 	//		 */
-	//		@RequestMapping(value="/",method= RequestMethod.GET)
-	//		public void home() {
-	//			logger.info("WEBSERVER - home() called"); 
-	//		}
+	//	@RequestMapping(value="/",method= RequestMethod.GET)
+	//	public String home() {
+	//		logger.info("WEBSERVER - home() called"); 
+	//		return "home";
+	//	}
 
 	@RequestMapping(value="/getEmpName",method= RequestMethod.GET)
 	public String getEmpName() {

@@ -4,14 +4,15 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRegistration;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
 
 public class WebAppInit implements WebApplicationInitializer{
 	
-	Logger logger = Logger.getLogger(WebAppInit.class);
+	Logger logger=LogManager.getLogger();
 
 	@Override
 	public void onStartup(ServletContext servletContext) throws ServletException {
