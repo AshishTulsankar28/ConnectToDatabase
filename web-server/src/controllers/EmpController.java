@@ -8,6 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,6 +24,10 @@ import views.ResponseVM;
 public class EmpController extends WebController{
 
 	Logger logger=LogManager.getLogger();
+	
+	public EmpController() {
+		logger.trace("WEBSERVER - EmpController constructor invoked");
+	}
 
 	@Autowired
 	EmpService empService;
@@ -40,14 +45,14 @@ public class EmpController extends WebController{
 
 	@RequestMapping(value="/getEmpName",method= RequestMethod.GET)
 	public String getEmpName() {
-		logger.info("WEBSERVER - getEmpName() called"+empService.getEmpName(0)); 
+		logger.trace("WEBSERVER - getEmpName() called"+empService.getEmpName(0)); 
 		return empService.getEmpName(0);
 
 	}
 
 	@RequestMapping(value="/demo",method= RequestMethod.GET)
 	public ResponseVM demo() {
-		logger.info("WEBSERVER - getEmpName() called"+empService.getEmpName(0));
+		logger.trace("WEBSERVER - getEmpName() called"+empService.getEmpName(0));
 
 		ResponseVM response=new ResponseVM();
 		response.setResponseData(empService.getEmpName(0));
