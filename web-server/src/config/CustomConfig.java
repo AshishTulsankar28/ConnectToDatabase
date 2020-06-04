@@ -18,6 +18,8 @@ import org.springframework.web.servlet.view.JstlView;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 @Configuration
 @EnableWebMvc
@@ -44,7 +46,12 @@ public class CustomConfig implements WebMvcConfigurer{
 	public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
 		logger.trace("WEBSERVER - CustomConfig added");
 		ObjectMapper mapper = new ObjectMapper();
-
+		//To map a LocalDate into a String like 1982-06-23
+		mapper.registerModule(new JavaTimeModule());
+		//represent a Date as a String in JSON
+		mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+		
+		
 		for (HttpMessageConverter<?> converter : converters) {
 			if (converter instanceof MappingJackson2HttpMessageConverter) {
 				MappingJackson2HttpMessageConverter m = (MappingJackson2HttpMessageConverter) converter;
@@ -67,6 +74,7 @@ public class CustomConfig implements WebMvcConfigurer{
 
 	}
 
+	// Request- Response Interceptor
 	public void addInterceptors(InterceptorRegistry registry) {
 		logger.trace("WEBSERVER - addInterceptors called");
 		registry.addInterceptor(new CustomLoggerInterceptor());
