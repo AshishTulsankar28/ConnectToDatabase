@@ -12,17 +12,17 @@ import org.springframework.web.servlet.DispatcherServlet;
 
 public class WebAppInit implements WebApplicationInitializer{
 	
-	Logger logger=LogManager.getLogger();
+	//Logger logger=LogManager.getLogger();
 
 	@Override
 	public void onStartup(ServletContext servletContext) throws ServletException {
 		
-		logger.trace("WEBSERVER - Initializing Annotation based appContext ");
+		//logger.trace("WEBSERVER - Initializing Annotation based appContext ");
 		AnnotationConfigWebApplicationContext appContext=new AnnotationConfigWebApplicationContext();
 		appContext.register(CustomConfig.class);
 		appContext.setServletContext(servletContext);
 		
-		logger.trace("WEBSERVER - Registering Dispatcher servlet ");
+		//logger.trace("WEBSERVER - Registering Dispatcher servlet ");
 		ServletRegistration.Dynamic servlet=servletContext.addServlet("springDispatcherServlet", new DispatcherServlet(appContext));
 		servlet.setLoadOnStartup(1);
 		servlet.addMapping("/");

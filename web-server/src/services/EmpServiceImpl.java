@@ -4,14 +4,22 @@
 package services;
 
 
+import java.util.Optional;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import config.HibernateUtil;
+import repositories.EmpRepository;
+
 import views.Employees;
 
 /**
@@ -21,11 +29,17 @@ import views.Employees;
 @Service
 public class EmpServiceImpl implements EmpService {
 
+	
+	@Autowired
+	private EmpRepository empRepository;
+	@Autowired
+	HibernateTemplate hibernateTemplate;
+	
+	//Logger logger=LogManager.getLogger();
+	
 	public EmpServiceImpl() {
-		logger.trace("WEBSERVER - EmpServiceImpl Default Constructor invoked ");
+		//logger.trace("WEBSERVER - EmpServiceImpl Default Constructor invoked ");
 	}
-
-	Logger logger=LogManager.getLogger();	
 
 	@Override
 	public String getEmpName(int empId) {
@@ -58,7 +72,7 @@ public class EmpServiceImpl implements EmpService {
 			tr.commit();
 			session.close();
 		} catch (Exception e) {
-			logger.trace("Exception occured in addEmp method"+e);
+			//logger.trace("Exception occured in addEmp method"+e);
 		}
 
 
@@ -75,4 +89,41 @@ public class EmpServiceImpl implements EmpService {
 		return (int) query.getSingleResult();
 	}
 
+	@Override
+	public Employees findEmpById(int empId) {
+		Optional<Employees> e=empRepository.findById(empId);
+		if(e.isPresent()) {
+			return e.get();	
+		}
+		return null;
+	}
+
+	@Override
+	public void persistEmp(Employees emp) {
+		empRepository.save(emp);
+	}
+
+	@Override
+	@Transactional(transactionManager = "transactionManager",propagation = Propagation.REQUIRED,readOnly = false)
+	public void updateEmp(Employees emp) {
+		Employees origEmp=findEmpById(emp.getEmpNo());
+
+		origEmp.setFirstName(emp.getFirstName());
+		origEmp.setBirthDate(emp.getBirthDate());
+		origEmp.setLastName(emp.getLastName());
+		origEmp.setGender(emp.getGender());
+		origEmp.setHireDate(emp.getHireDate());
+		
+	}
+
+	@Override
+	public void deleteEmp(int empId) {
+		Session session=hibernateTemplate.getSessionFactory().getCurrentSession();
+		Transaction tr=session.beginTransaction();
+		hibernateTemplate.delete(hibernateTemplate.get(Employees.class, empId));
+		tr.commit();
+		session.close();
+	}
+	
+	
 }

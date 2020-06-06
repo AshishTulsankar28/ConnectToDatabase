@@ -11,10 +11,19 @@ import org.hibernate.service.ServiceRegistry;
 
 import views.Employees;
 
+/**
+ * Class used for defining Hibernate configuration
+ * @author Ashish Tulsankar
+ *
+ */
 public class HibernateUtil {
 
 	private static SessionFactory sessionFactory;
-
+    
+	/**
+	 * Method to set hibernate properties programmatically.
+	 * @return {@link SessionFactory} object with defined properties
+	 */
 	public static SessionFactory getSessionFactory() {
 		if (sessionFactory == null) {
 			try {

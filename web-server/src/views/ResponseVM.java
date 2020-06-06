@@ -1,7 +1,11 @@
 package views;
 
 import org.springframework.http.HttpStatus;
-
+/**
+ * Generic response view model to make response data consistent for the client application
+ * @author Ashish Tulsankar
+ *
+ */
 public class ResponseVM {
 	
 	private HttpStatus status;

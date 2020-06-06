@@ -7,6 +7,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -24,19 +25,20 @@ import views.ResponseVM;
 @RestController
 public class EmpController extends WebController{
 
-	Logger logger=LogManager.getLogger();
+
 	@Autowired
 	EmpService empService;
+	//	Logger logger=LogManager.getLogger();
 
 
 	public EmpController() {
 		// DO nothing
-		logger.trace("WEBSERVER - EmpController constructor invoked");
+		//logger.trace("WEBSERVER - EmpController constructor invoked");
 	}
 
-	@RequestMapping(value="/getEmpName",method= RequestMethod.GET)
-	public ResponseVM getEmpName(@RequestParam int empId) {
-		logger.trace("WEBSERVER - getEmpName() called"+empId); 
+	@RequestMapping(value="/getEmpName/{empId}",method= RequestMethod.GET)
+	public ResponseVM getEmpName(@PathVariable int empId) {
+		//logger.trace("WEBSERVER - getEmpName() called"+empId); 
 
 		ResponseVM response=new ResponseVM();
 		response.setResponseData(empService.getEmpName(empId));
@@ -47,7 +49,7 @@ public class EmpController extends WebController{
 
 	@RequestMapping(value="/getEmpDetails",method= RequestMethod.GET)
 	public ResponseVM getEmpDetails(@RequestParam int empId) {
-		logger.trace("WEBSERVER - getEmpDetails() called"+empId);
+		//logger.trace("WEBSERVER - getEmpDetails() called"+empId);
 
 		ResponseVM response=new ResponseVM();
 		response.setResponseData(empService.getEmpDetails(empId));
@@ -70,6 +72,36 @@ public class EmpController extends WebController{
 
 	}
 
+	@RequestMapping(value="/findEmpById/{empId}",method=RequestMethod.GET)
+	public ResponseVM findEmpById(@PathVariable int empId) {
+
+		ResponseVM response=new ResponseVM();
+		response.setResponseData(empService.findEmpById(empId));
+		return response;
+
+	}
+
+	@RequestMapping(value="/persistEmp",method=RequestMethod.POST)
+	public void persistEmp(@RequestBody Employees emp) {
+
+		emp.setEmpNo(empService.getMaxEmpId()+1);
+		empService.persistEmp(emp);
+
+	}
+	
+	@RequestMapping(value="/updateEmp",method=RequestMethod.POST)
+	public void updateEmp(@RequestBody Employees emp) {
+
+		empService.updateEmp(emp);
+
+	}
+	
+	@RequestMapping(value="/deleteEmp",method=RequestMethod.POST)
+	public void deleteEmp(@RequestParam int empId) {
+
+		empService.deleteEmp(empId);
+
+	}
 
 	//		/**
 	//		 *  Root URL that will be invoked on application start up

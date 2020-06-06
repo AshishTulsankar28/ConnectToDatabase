@@ -1,5 +1,8 @@
 package services;
 
+import javax.persistence.Id;
+
+import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import views.Employees;
@@ -29,4 +32,25 @@ public interface EmpService {
 	 * @return Associated employee Number as unique key constraint 
 	 */
 	public int addEmp(Employees emp);
+	/**
+	 * Method uses spring data repository to search employee using its {@link Id} attribute
+	 * @param empId to be searched
+	 * @return {@link Employees} object for the provided empId
+	 */
+	public Employees findEmpById(int empId);
+	/**
+	 * Method to insert {@link Employees} record using spring data repository
+	 * @param emp represents object to be saved.
+	 */
+	public void persistEmp(Employees emp);
+	/**
+	 * Update {@link Employees} record using Spring declarative transaction
+	 * @param emp {@link Employees} object with new/ updated values
+	 */
+	public void updateEmp(Employees emp);
+	/**
+	 * Delete {@link Employees} record using {@link HibernateTemplate}
+	 * @param empId which is to be deleted
+	 */
+	public void deleteEmp(int empId);
 }

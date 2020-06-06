@@ -13,7 +13,7 @@ public class WebController extends AbstractController{
 	Logger logger=LogManager.getLogger();
 	
 	public WebController() {
-		logger.trace("WEBSERVER - WebController default constructor invoked");
+		//logger.trace("WEBSERVER - WebController default constructor invoked");
 	}
 	
 	@Override
