@@ -28,6 +28,7 @@ Project basically includes configuration and designing of web APIs.
 5. Intro to HibernateTemplate
 6. Intro to Spring Data Repository
 7. Web APIs designed for CRUD operations using different approaches.
+8. HikariCP configuration implemented
 ```
 
 ## Android Appliation
