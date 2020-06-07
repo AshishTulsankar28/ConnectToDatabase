@@ -28,13 +28,8 @@ public class EmpController extends WebController{
 
 	@Autowired
 	EmpService empService;
-	//	Logger logger=LogManager.getLogger();
+	Logger logger=LogManager.getLogger();
 
-
-	public EmpController() {
-		// DO nothing
-		//logger.trace("WEBSERVER - EmpController constructor invoked");
-	}
 
 	@RequestMapping(value="/getEmpName/{empId}",method= RequestMethod.GET)
 	public ResponseVM getEmpName(@PathVariable int empId) {
@@ -49,7 +44,6 @@ public class EmpController extends WebController{
 
 	@RequestMapping(value="/getEmpDetails",method= RequestMethod.GET)
 	public ResponseVM getEmpDetails(@RequestParam int empId) {
-		//logger.trace("WEBSERVER - getEmpDetails() called"+empId);
 
 		ResponseVM response=new ResponseVM();
 		response.setResponseData(empService.getEmpDetails(empId));
@@ -64,7 +58,7 @@ public class EmpController extends WebController{
 		ResponseVM response=new ResponseVM();
 
 		if(emp!=null) {
-			emp.setEmpNo(empService.getMaxEmpId()+1);
+			
 			response.setResponseData(empService.addEmp(emp));
 		}
 
@@ -82,24 +76,23 @@ public class EmpController extends WebController{
 	}
 
 	@RequestMapping(value="/persistEmp",method=RequestMethod.POST)
-	public void persistEmp(@RequestBody Employees emp) {
+	public int persistEmp(@RequestBody Employees emp) {
 
-		emp.setEmpNo(empService.getMaxEmpId()+1);
-		empService.persistEmp(emp);
+		return empService.persistEmp(emp);
 
 	}
 	
 	@RequestMapping(value="/updateEmp",method=RequestMethod.POST)
-	public void updateEmp(@RequestBody Employees emp) {
+	public boolean updateEmp(@RequestBody Employees emp) {
 
-		empService.updateEmp(emp);
+		return empService.updateEmp(emp);
 
 	}
 	
 	@RequestMapping(value="/deleteEmp",method=RequestMethod.POST)
-	public void deleteEmp(@RequestParam int empId) {
+	public boolean deleteEmp(@RequestParam int empId) {
 
-		empService.deleteEmp(empId);
+		return empService.deleteEmp(empId);
 
 	}
 

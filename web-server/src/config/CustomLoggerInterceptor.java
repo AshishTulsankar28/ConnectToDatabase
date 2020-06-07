@@ -19,13 +19,13 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
  */
 public class CustomLoggerInterceptor extends HandlerInterceptorAdapter{
 
-	//Logger logger =LogManager.getLogger();
+	Logger logger =LogManager.getLogger();
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
 
-		//logger.trace("[preHandle][" + request + "]" + "[" + request.getMethod()+ "]" + request.getRequestURI() + getParameters(request));
+		logger.trace("[preHandle][" + request + "]" + "[" + request.getMethod()+ "]" + request.getRequestURI() + getParameters(request));
 
 		return true;
 	}
@@ -37,7 +37,7 @@ public class CustomLoggerInterceptor extends HandlerInterceptorAdapter{
 			Object handler, 
 			ModelAndView modelAndView) throws Exception {
 
-		//logger.trace("[postHandle][" + request + "]");
+		logger.trace("[postHandle][" + request + "]");
 	}
 
 	@Override
@@ -47,7 +47,7 @@ public class CustomLoggerInterceptor extends HandlerInterceptorAdapter{
 		if (ex != null){
 			ex.printStackTrace();
 		}
-		//logger.trace("[afterCompletion][" + request + "][exception: " + ex + "]");
+		logger.trace("[afterCompletion][" + request + "][exception: " + ex + "]");
 	}
 
 	private String getParameters(HttpServletRequest request) {
@@ -81,7 +81,7 @@ public class CustomLoggerInterceptor extends HandlerInterceptorAdapter{
 	private String getRemoteAddr(HttpServletRequest request) {
 		String ipFromHeader = request.getHeader("X-FORWARDED-FOR");
 		if (ipFromHeader != null && ipFromHeader.length() > 0) {
-			//logger.trace("ip from proxy - X-FORWARDED-FOR : " + ipFromHeader);
+			logger.trace("IP from proxy - X-FORWARDED-FOR : " + ipFromHeader);
 			return ipFromHeader;
 		}
 		return request.getRemoteAddr();

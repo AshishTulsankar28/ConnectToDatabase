@@ -13,13 +13,13 @@ public class WebController extends AbstractController{
 	Logger logger=LogManager.getLogger();
 	
 	public WebController() {
-		//logger.trace("WEBSERVER - WebController default constructor invoked");
+		logger.debug("WEBSERVER - WebController default constructor invoked");
 	}
 	
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		logger.trace("WEBSERVER - handleRequestInternal - "+request+" response - "+response);
+		logger.debug("WEBSERVER - handleRequestInternal - "+request+" response - "+response);
 		return new ModelAndView();
 	}
 

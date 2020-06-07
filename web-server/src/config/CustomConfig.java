@@ -1,10 +1,7 @@
 package config;
 
 import java.util.List;
-
 import javax.persistence.EntityManagerFactory;
-import javax.sql.DataSource;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.annotation.Bean;
@@ -13,7 +10,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -31,21 +27,19 @@ import org.springframework.web.servlet.view.UrlBasedViewResolver;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+import constants.DB_CONSTANTS;
+//import javax.sql.DataSource;
+//import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 @Configuration
 @EnableWebMvc
-@ComponentScan({"config","services","controllers","views"})
+@ComponentScan({"config","services","controllers"})
 @EnableJpaRepositories(basePackages = {"repositories"})
 @EnableTransactionManagement
 public class CustomConfig implements WebMvcConfigurer{
-	//Logger logger=LogManager.getLogger();
-
-	private static final String PROPERTY_NAME_DATABASE_DRIVER = "com.mysql.cj.jdbc.Driver";
-	private static final String PROPERTY_NAME_DATABASE_URL = "jdbc:mysql://localhost:3306/ashish";
-	private static final String PROPERTY_NAME_DATABASE_USERNAME = "root";
-	private static final String PROPERTY_NAME_DATABASE_PASSWORD = "root";
-
+	Logger logger=LogManager.getLogger();
 
 	/* Configure the view that will be displayed on start-up */
 	public void addViewControllers(ViewControllerRegistry viewCtrlRegistry) {
@@ -101,37 +95,57 @@ public class CustomConfig implements WebMvcConfigurer{
 		registry.addInterceptor(new CustomLoggerInterceptor());
 	}
 
+	/*Using jdbc.datasource.DriverManagerDataSource*/
+	//	@Bean
+	//	public DataSource dataSource() {
+	//		DriverManagerDataSource dataSource = new DriverManagerDataSource();
+	//
+	//		dataSource.setDriverClassName(DbProperties.DB_DRIVER);
+	//		dataSource.setUrl(DbProperties.DB_URL);
+	//		dataSource.setUsername(DbProperties.DB_USER);
+	//		dataSource.setPassword(DbProperties.DB_PWD);
+	//
+	//		return dataSource;
+	//	}
+
+	/*Configured Hikari DS*/
 	@Bean
-	public DataSource dataSource() {
-		DriverManagerDataSource dataSource = new DriverManagerDataSource();
+	public HikariDataSource hikariDS() {
 
-		dataSource.setDriverClassName(PROPERTY_NAME_DATABASE_DRIVER);
-		dataSource.setUrl(PROPERTY_NAME_DATABASE_URL);
-		dataSource.setUsername(PROPERTY_NAME_DATABASE_USERNAME);
-		dataSource.setPassword(PROPERTY_NAME_DATABASE_PASSWORD);
+		HikariConfig config = new HikariConfig();
+		config.setDriverClassName(DB_CONSTANTS.DB_DRIVER);
+		config.setJdbcUrl(DB_CONSTANTS.DB_URL);
+		config.setUsername(DB_CONSTANTS.DB_USER);
+		config.setPassword(DB_CONSTANTS.DB_PWD);
+		config.setMaximumPoolSize(Integer.valueOf(DB_CONSTANTS.MAX_POOL_SIZE));
+		config.setIdleTimeout(Integer.valueOf(DB_CONSTANTS.IDLE_TIMEOUT));
+		config.setConnectionTimeout(Integer.valueOf(DB_CONSTANTS.CONNECTION_TIMEOUT));
+		config.setMinimumIdle(Integer.valueOf(DB_CONSTANTS.MIN_IDLE));
+		config.setPoolName("myHikariCP");
+		
+		HikariDataSource hikariDS=new HikariDataSource(config);
 
-		return dataSource;
+		return hikariDS;
 	}
 
 	@Bean
 	public PlatformTransactionManager transactionManager() {
-		
 		EntityManagerFactory factory = entityManagerFactory();
 		return new JpaTransactionManager(factory);
 	}
 
 	@Bean
 	public EntityManagerFactory entityManagerFactory() {
-		
+
 		HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
 		vendorAdapter.setGenerateDdl(Boolean.TRUE);
 		vendorAdapter.setShowSql(Boolean.TRUE);
 		vendorAdapter.setDatabase(Database.MYSQL);
-		
+
 		LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
 		factory.setJpaVendorAdapter(vendorAdapter);
 		factory.setPackagesToScan("views");
-		factory.setDataSource(dataSource());
+		factory.setDataSource(hikariDS());
 		factory.afterPropertiesSet();
 		//factory.setLoadTimeWeaver(new InstrumentationLoadTimeWeaver());
 		return factory.getObject();
@@ -139,7 +153,8 @@ public class CustomConfig implements WebMvcConfigurer{
 
 	@Bean
 	public HibernateTemplate hibernateTemplate() {
+
 		return new HibernateTemplate(HibernateUtil.getSessionFactory());
-		
+
 	}
 }

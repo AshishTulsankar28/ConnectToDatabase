@@ -59,10 +59,10 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<version>8.0.19</version>
 		</dependency>
-		<!-- hibernate dependency as an ORM tool -->
+		<!-- Replaced hibernate-core dependency with hikaricp -->
 		<dependency>
 			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-core</artifactId>
+			<artifactId>hibernate-hikaricp</artifactId>
 			<version>5.4.15.Final</version>
 		</dependency>
 		<!--To deal with Java 8 Date & time :: https://mvnrepository.com/artifact/com.fasterxml.jackson.datatype/jackson-datatype-jsr310 -->
@@ -76,6 +76,6 @@
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-jpa</artifactId>
 			<version>2.3.0.RELEASE</version>
-		</dependency>
+		</dependency>		 
 	</dependencies>
 </project>

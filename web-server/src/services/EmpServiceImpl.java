@@ -6,12 +6,16 @@ package services;
 
 import java.util.Optional;
 
+import javax.persistence.NoResultException;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -29,28 +33,33 @@ import views.Employees;
 @Service
 public class EmpServiceImpl implements EmpService {
 
-	
+
 	@Autowired
 	private EmpRepository empRepository;
 	@Autowired
 	HibernateTemplate hibernateTemplate;
-	
-	//Logger logger=LogManager.getLogger();
-	
-	public EmpServiceImpl() {
-		//logger.trace("WEBSERVER - EmpServiceImpl Default Constructor invoked ");
-	}
+
+	Logger logger=LogManager.getLogger();
+
 
 	@Override
 	public String getEmpName(int empId) {
 
-		Session session=HibernateUtil.getSessionFactory().openSession();
-		session.beginTransaction();
+		String empName=null;
+		try {
+			Session session=HibernateUtil.getSessionFactory().openSession();
+			session.beginTransaction();
 
-		Query query=session.createQuery("SELECT COALESCE(firstName,'') FROM Employees WHERE empNo= :empNo");
-		query.setParameter("empNo", empId );
+			@SuppressWarnings("rawtypes")
+			Query query=session.createQuery("SELECT concat(COALESCE(firstName,''),CONCAT(' ',COALESCE(lastName,''))) FROM Employees WHERE empNo= :empNo");
+			query.setParameter("empNo", empId );
+			empName=query.getSingleResult().toString();
+			session.close();
 
-		return query.getSingleResult().toString();
+		} catch (NoResultException e) {
+			logger.trace(e);
+		}
+		return empName;
 	}
 
 	@Override
@@ -63,11 +72,12 @@ public class EmpServiceImpl implements EmpService {
 
 	@Override
 	public int addEmp(Employees emp) {
-		int empId=0;
+		int empId=-1;
 
 		try {
 			Session session=HibernateUtil.getSessionFactory().openSession();
 			Transaction tr=session.beginTransaction();
+			emp.setEmpNo(getMaxEmpId()+1);
 			empId = (int)session.save(emp);
 			tr.commit();
 			session.close();
@@ -84,6 +94,7 @@ public class EmpServiceImpl implements EmpService {
 		Session session=HibernateUtil.getSessionFactory().openSession();
 		session.beginTransaction();
 
+		@SuppressWarnings("rawtypes")
 		Query query=session.createQuery("SELECT COALESCE(MAX(empNo),-1) FROM Employees");
 
 		return (int) query.getSingleResult();
@@ -99,31 +110,53 @@ public class EmpServiceImpl implements EmpService {
 	}
 
 	@Override
-	public void persistEmp(Employees emp) {
-		empRepository.save(emp);
+	public int persistEmp(Employees emp) {
+		int empId=-1;
+		try {
+			emp.setEmpNo(getMaxEmpId()+1);
+			empRepository.save(emp);
+			empId = emp.getEmpNo();
+		} catch (IllegalArgumentException e) {
+			logger.trace(e);
+		}
+		return empId;
 	}
 
 	@Override
 	@Transactional(transactionManager = "transactionManager",propagation = Propagation.REQUIRED,readOnly = false)
-	public void updateEmp(Employees emp) {
+	public boolean updateEmp(Employees emp) {
 		Employees origEmp=findEmpById(emp.getEmpNo());
-
-		origEmp.setFirstName(emp.getFirstName());
-		origEmp.setBirthDate(emp.getBirthDate());
-		origEmp.setLastName(emp.getLastName());
-		origEmp.setGender(emp.getGender());
-		origEmp.setHireDate(emp.getHireDate());
-		
+		if (origEmp!=null) {
+			origEmp.setBirthDate(emp.getBirthDate());
+			origEmp.setGender(emp.getGender());
+			origEmp.setHireDate(emp.getHireDate());
+			return true;
+		}
+		return false;
 	}
 
 	@Override
-	public void deleteEmp(int empId) {
-		Session session=hibernateTemplate.getSessionFactory().getCurrentSession();
-		Transaction tr=session.beginTransaction();
-		hibernateTemplate.delete(hibernateTemplate.get(Employees.class, empId));
-		tr.commit();
-		session.close();
+	public boolean deleteEmp(int empId) {
+		
+		try {
+			Session session=hibernateTemplate.getSessionFactory().getCurrentSession();
+			Transaction tr=session.beginTransaction();
+			Employees empToDel=hibernateTemplate.get(Employees.class, empId);
+			if(empToDel==null) {
+				return false;
+			}
+			
+			hibernateTemplate.delete(empToDel);
+			tr.commit();
+			session.close();
+			
+		} catch (DataAccessException e) {
+			logger.trace(e);
+			return false;
+		}
+		
+		return true;
 	}
-	
-	
+
+
 }

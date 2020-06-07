@@ -42,15 +42,15 @@ public interface EmpService {
 	 * Method to insert {@link Employees} record using spring data repository
 	 * @param emp represents object to be saved.
 	 */
-	public void persistEmp(Employees emp);
+	public int persistEmp(Employees emp);
 	/**
 	 * Update {@link Employees} record using Spring declarative transaction
 	 * @param emp {@link Employees} object with new/ updated values
 	 */
-	public void updateEmp(Employees emp);
+	public boolean updateEmp(Employees emp);
 	/**
 	 * Delete {@link Employees} record using {@link HibernateTemplate}
 	 * @param empId which is to be deleted
 	 */
-	public void deleteEmp(int empId);
+	public boolean deleteEmp(int empId);
 }
