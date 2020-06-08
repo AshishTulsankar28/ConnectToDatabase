@@ -41,6 +41,7 @@ Note: Android application was designed for Android 7.0 so it may warn you on new
 * [Web MVC](https://docs.spring.io/spring/docs/3.2.x/spring-framework-reference/html/mvc.html) - The web framework used
 * [Maven](https://maven.apache.org/) - Dependency Management
 * [Hibernate](https://hibernate.org/orm/) - Used as ORM tool
+* [Hikari DS](https://github.com/brettwooldridge/HikariCP) - Hikari CP
 
 ## Authors
 
