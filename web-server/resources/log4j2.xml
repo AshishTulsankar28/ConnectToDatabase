@@ -29,6 +29,10 @@
 		<Logger name="config" level="info">
 			<AppenderRef ref="Console" />
 		</Logger>
+		
+		<Logger name="com.zaxxer.hikari" level="debug" additivity="false">
+        <AppenderRef ref="Console"/>
+        </Logger>
 
 		<Root level="trace">
 			<AppenderRef ref="RollingFile" />

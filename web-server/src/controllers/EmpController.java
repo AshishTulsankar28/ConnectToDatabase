@@ -2,7 +2,6 @@
  * 
  */
 package controllers;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,15 +24,16 @@ import views.ResponseVM;
 @RestController
 public class EmpController extends WebController{
 
+	Logger logger=LogManager.getLogger();
 
 	@Autowired
 	EmpService empService;
-	Logger logger=LogManager.getLogger();
+	
 
 
 	@RequestMapping(value="/getEmpName/{empId}",method= RequestMethod.GET)
 	public ResponseVM getEmpName(@PathVariable int empId) {
-		//logger.trace("WEBSERVER - getEmpName() called"+empId); 
+		
 
 		ResponseVM response=new ResponseVM();
 		response.setResponseData(empService.getEmpName(empId));
@@ -82,20 +82,28 @@ public class EmpController extends WebController{
 
 	}
 	
-	@RequestMapping(value="/updateEmp",method=RequestMethod.POST)
+	@RequestMapping(value="/updateEmp",method=RequestMethod.PUT)
 	public boolean updateEmp(@RequestBody Employees emp) {
 
 		return empService.updateEmp(emp);
 
 	}
 	
-	@RequestMapping(value="/deleteEmp",method=RequestMethod.POST)
+	@RequestMapping(value="/deleteEmp",method=RequestMethod.DELETE)
 	public boolean deleteEmp(@RequestParam int empId) {
 
 		return empService.deleteEmp(empId);
 
 	}
 
+	@RequestMapping(value="/getAllEmp",method=RequestMethod.GET)
+	public ResponseVM getAllEmp() {
+
+		ResponseVM resonse=new ResponseVM();
+		resonse.setResponseData(empService.getAllEmp(0, 0));
+		return resonse;
+
+	}
 	//		/**
 	//		 *  Root URL that will be invoked on application start up
 	//		 *  but it will prevent view from rendering 

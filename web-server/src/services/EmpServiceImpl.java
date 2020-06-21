@@ -4,24 +4,24 @@
 package services;
 
 
+import java.util.List;
 import java.util.Optional;
 
+import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-import org.hibernate.query.Query;
+
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
-import org.springframework.orm.hibernate5.HibernateTemplate;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import config.HibernateUtil;
 import repositories.EmpRepository;
 
 import views.Employees;
@@ -33,28 +33,24 @@ import views.Employees;
 @Service
 public class EmpServiceImpl implements EmpService {
 
+	Logger logger=LogManager.getLogger();
 
 	@Autowired
 	private EmpRepository empRepository;
-	@Autowired
-	HibernateTemplate hibernateTemplate;
-
-	Logger logger=LogManager.getLogger();
-
+	@PersistenceContext
+	private EntityManager entityManager;
 
 	@Override
+	@Transactional(transactionManager = "transactionManager",propagation = Propagation.REQUIRED,readOnly = true)
 	public String getEmpName(int empId) {
 
 		String empName=null;
 		try {
-			Session session=HibernateUtil.getSessionFactory().openSession();
-			session.beginTransaction();
 
-			@SuppressWarnings("rawtypes")
-			Query query=session.createQuery("SELECT concat(COALESCE(firstName,''),CONCAT(' ',COALESCE(lastName,''))) FROM Employees WHERE empNo= :empNo");
+			Query query=entityManager.createQuery("SELECT concat(COALESCE(firstName,''),CONCAT(' ',COALESCE(lastName,''))) FROM Employees WHERE empNo= :empNo");
 			query.setParameter("empNo", empId );
 			empName=query.getSingleResult().toString();
-			session.close();
+
 
 		} catch (NoResultException e) {
 			logger.trace(e);
@@ -63,39 +59,38 @@ public class EmpServiceImpl implements EmpService {
 	}
 
 	@Override
+	@Transactional(transactionManager = "transactionManager",propagation = Propagation.REQUIRED,readOnly = true)
 	public Employees getEmpDetails(int empId) {
-		Session session=HibernateUtil.getSessionFactory().openSession();
-		session.beginTransaction();
 
-		return session.get(Employees.class, empId);
+		return entityManager.find(Employees.class, empId);
 	}
 
 	@Override
+	@Transactional(transactionManager = "transactionManager",propagation = Propagation.REQUIRES_NEW,readOnly = false)
 	public int addEmp(Employees emp) {
-		int empId=-1;
+		
 
 		try {
-			Session session=HibernateUtil.getSessionFactory().openSession();
-			Transaction tr=session.beginTransaction();
+
 			emp.setEmpNo(getMaxEmpId()+1);
-			empId = (int)session.save(emp);
-			tr.commit();
-			session.close();
+			entityManager.persist(emp);
+			return emp.getEmpNo();
+			
+
 		} catch (Exception e) {
 			//logger.trace("Exception occured in addEmp method"+e);
 		}
 
 
-		return empId;
+		return -1;
 	}
 
 	@Override
+	@Transactional(transactionManager = "transactionManager",propagation = Propagation.REQUIRED,readOnly = true)
 	public int getMaxEmpId() {
-		Session session=HibernateUtil.getSessionFactory().openSession();
-		session.beginTransaction();
 
-		@SuppressWarnings("rawtypes")
-		Query query=session.createQuery("SELECT COALESCE(MAX(empNo),-1) FROM Employees");
+
+		Query query=entityManager.createQuery("SELECT COALESCE(MAX(empNo),-1) FROM Employees");
 
 		return (int) query.getSingleResult();
 	}
@@ -123,7 +118,7 @@ public class EmpServiceImpl implements EmpService {
 	}
 
 	@Override
-	@Transactional(transactionManager = "transactionManager",propagation = Propagation.REQUIRED,readOnly = false)
+	@Transactional(transactionManager = "transactionManager",propagation = Propagation.REQUIRES_NEW,readOnly = false)
 	public boolean updateEmp(Employees emp) {
 		Employees origEmp=findEmpById(emp.getEmpNo());
 		if (origEmp!=null) {
@@ -135,27 +130,44 @@ public class EmpServiceImpl implements EmpService {
 		return false;
 	}
 
+	
 	@Override
+	@Transactional(transactionManager = "transactionManager",propagation = Propagation.REQUIRES_NEW,readOnly = false)
 	public boolean deleteEmp(int empId) {
+
+
 		
-		try {
-			Session session=hibernateTemplate.getSessionFactory().getCurrentSession();
-			Transaction tr=session.beginTransaction();
-			Employees empToDel=hibernateTemplate.get(Employees.class, empId);
-			if(empToDel==null) {
-				return false;
-			}
-			
-			hibernateTemplate.delete(empToDel);
-			tr.commit();
-			session.close();
-			
-		} catch (DataAccessException e) {
-			logger.trace(e);
+		Employees empToDel=entityManager.find(Employees.class, empId);
+
+		if(empToDel==null) {
 			return false;
 		}
+
+		entityManager.remove(empToDel);
 		
+
 		return true;
+	}
+
+
+	@SuppressWarnings("unchecked")
+	@Override
+	@Transactional(transactionManager = "transactionManager",propagation = Propagation.REQUIRED,readOnly = true)
+	public List<Employees> getAllEmp(int orderBy,int limit) {
+
+		if(limit>0) {
+
+			Query query=entityManager.createQuery("FROM Employees ORDER BY :orderBy LIMIT :limit");
+			query.setParameter("orderBy", 3);
+			query.setParameter("limit", 5);
+
+			return query.getResultList();
+
+		}
+		
+		return empRepository.findAll();
+
+
 	}
 
 

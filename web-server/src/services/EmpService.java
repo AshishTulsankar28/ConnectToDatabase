@@ -1,5 +1,7 @@
 package services;
 
+import java.util.List;
+
 import javax.persistence.Id;
 
 import org.springframework.orm.hibernate5.HibernateTemplate;
@@ -53,4 +55,6 @@ public interface EmpService {
 	 * @param empId which is to be deleted
 	 */
 	public boolean deleteEmp(int empId);
+	
+	public List<Employees> getAllEmp(int orderBy,int limit);
 }

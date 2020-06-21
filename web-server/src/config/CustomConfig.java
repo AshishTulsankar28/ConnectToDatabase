@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.Database;
@@ -30,8 +29,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import constants.DB_CONSTANTS;
-//import javax.sql.DataSource;
-//import org.springframework.jdbc.datasource.DriverManagerDataSource;
+
 
 @Configuration
 @EnableWebMvc
@@ -95,18 +93,7 @@ public class CustomConfig implements WebMvcConfigurer{
 		registry.addInterceptor(new CustomLoggerInterceptor());
 	}
 
-	/*Using jdbc.datasource.DriverManagerDataSource*/
-	//	@Bean
-	//	public DataSource dataSource() {
-	//		DriverManagerDataSource dataSource = new DriverManagerDataSource();
-	//
-	//		dataSource.setDriverClassName(DbProperties.DB_DRIVER);
-	//		dataSource.setUrl(DbProperties.DB_URL);
-	//		dataSource.setUsername(DbProperties.DB_USER);
-	//		dataSource.setPassword(DbProperties.DB_PWD);
-	//
-	//		return dataSource;
-	//	}
+
 
 	/*Configured Hikari DS*/
 	@Bean
@@ -121,8 +108,9 @@ public class CustomConfig implements WebMvcConfigurer{
 		config.setIdleTimeout(Integer.valueOf(DB_CONSTANTS.IDLE_TIMEOUT));
 		config.setConnectionTimeout(Integer.valueOf(DB_CONSTANTS.CONNECTION_TIMEOUT));
 		config.setMinimumIdle(Integer.valueOf(DB_CONSTANTS.MIN_IDLE));
-		config.setPoolName("myHikariCP");
-		
+		config.setPoolName("hibernate_hikari_pool");
+
+
 		HikariDataSource hikariDS=new HikariDataSource(config);
 
 		return hikariDS;
@@ -130,7 +118,7 @@ public class CustomConfig implements WebMvcConfigurer{
 
 	@Bean
 	public PlatformTransactionManager transactionManager() {
-		EntityManagerFactory factory = entityManagerFactory();
+		EntityManagerFactory factory = entityManagerFactory();		
 		return new JpaTransactionManager(factory);
 	}
 
@@ -151,10 +139,39 @@ public class CustomConfig implements WebMvcConfigurer{
 		return factory.getObject();
 	}
 
-	@Bean
-	public HibernateTemplate hibernateTemplate() {
+	/**
+	 * Template based approach for Data Access
+	 * @return HibernateTemplate
+	 * @see
+	 * {@link https://nofluffjuststuff.com/blog/shay_banon/2006/08/hibernate_vs_spring__hibernate_template}
+	 * {@link https://spring.io/blog/2007/06/26/so-should-you-still-use-spring-s-hibernatetemplate-and-or-jpatemplate}
+	 * <dt>Last Modified:</dt>
+	 * <dd> 20 June,2020 </dd>
+	 */
+	//	@Bean
+	//	public HibernateTemplate hibernateTemplate() {
+	//		return new HibernateTemplate(HibernateUtil.getSessionFactory());
+	//
+	//	}
 
-		return new HibernateTemplate(HibernateUtil.getSessionFactory());
-
-	}
+	/**
+	 * Implementation of required datasource per database connection
+	 * using jdbc.datasource.DriverManagerDataSource
+	 * 
+	 * @return DataSource
+	 * <dt>Last Modified:</dt>
+	 * <dd> 20 June,2020 </dd>
+	 * Code Commented since Hikari connection pooling is implemented
+	 */
+	//		@Bean
+	//		public DataSource dataSource() {
+	//			DriverManagerDataSource dataSource = new DriverManagerDataSource();
+	//	
+	//			dataSource.setDriverClassName(DbProperties.DB_DRIVER);
+	//			dataSource.setUrl(DbProperties.DB_URL);
+	//			dataSource.setUsername(DbProperties.DB_USER);
+	//			dataSource.setPassword(DbProperties.DB_PWD);
+	//	
+	//			return dataSource;
+	//		}
 }
