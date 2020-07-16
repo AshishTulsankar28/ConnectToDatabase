@@ -1,7 +1,11 @@
 package test;
 
 import java.util.Scanner;
-
+/**
+ * 
+ * @author Ashish Tulsankar
+ *
+ */
 public class MathUtil {
 	
 	public static void main(String[] args) {
