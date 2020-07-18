@@ -1,43 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE xml>
-<Configuration >
+<Configuration status="info">
 
-
-	<Appenders>
-	
-		<Console name="Console" target="SYSTEM_OUT">
-			<PatternLayout
-				pattern="%d{YYYY-MM-dd HH:mm:ss} [%t] %-5p %c{1}:%L - %msg%n" />
-		</Console>
-
-		<RollingFile name="RollingFile"
-			filename="C:/Program Files/Java/apache-tomcat-8.5.55-windows-x64/apache-tomcat-8.5.55/logs/junit-server.log"
-			filepattern="${logPath}/%d{YYYYMMddHHmmss}-fargo.log">
-			<PatternLayout
-				pattern="%d{YYYY-MM-dd HH:mm:ss} [%t] %-5p %c{1}:%L - %msg%n" />
-			<Policies>
-				<SizeBasedTriggeringPolicy size="3 MB" />
-			</Policies>
-			<DefaultRolloverStrategy max="20" />
-		</RollingFile>
-
-	</Appenders>
-
-
-	<Loggers>
-
-		<Logger name="config" level="info">
-			<AppenderRef ref="Console" />
-		</Logger>
-		
-		<Logger name="com.zaxxer.hikari" level="debug" additivity="false">
-        <AppenderRef ref="Console"/>
-        </Logger>
-
-		<Root level="trace">
-			<AppenderRef ref="RollingFile" />
-		</Root>
-
-	</Loggers>
+ <Appenders>
+        <Console name="console" target="SYSTEM_OUT">
+            <PatternLayout
+                pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n" />
+        </Console>
+    </Appenders>
+    <Loggers>
+        <Root level="debug" additivity="false">
+            <AppenderRef ref="console" />
+        </Root>
+    </Loggers>
 	
 </Configuration>
