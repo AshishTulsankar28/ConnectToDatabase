@@ -1,5 +1,9 @@
 package services;
 
+import java.util.List;
+
+import views.Employees;
+
 public interface TestService {
 
 	/**
@@ -8,5 +12,11 @@ public interface TestService {
 	 * @return employee name
 	 */
 	public String getAppName();
+	/**
+	 * Returns employee specific Id using given empId.
+	 * @param empId if -1 then return list of available employees else return matching record.
+	 * @return {@link List} of matching {@link Employees}
+	 */
+	public List<Employees> getEmpDetails(int empId);
 	
 }

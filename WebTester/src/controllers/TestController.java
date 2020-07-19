@@ -43,4 +43,11 @@ public class TestController {
 		
 	}
 
+	@RequestMapping(value="/getEmpDetails/{empId}",method = RequestMethod.GET)
+	public ResponseData getEmpDetails(@PathVariable int empId) {
+		logger.debug("getEmpDetails method called from TestController with pathVariable as "+empId);
+		return new ResponseData(testService.getEmpDetails(empId));
+		
+	}
+	
 }
