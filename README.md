@@ -13,7 +13,7 @@ In current Project, we have used MySQL as RDBMS and utilized basic JDBC connecti
 ```
 
 ## 2.CoreJava
-
+Simple Java programs referred from HackerRank
 
 ## 3.JUnitIntro
 
@@ -33,9 +33,16 @@ Project demonstrates unit as well as integration testing for REST APIs in Spring
 ```
 1. Junit4
 ```
+
 ## 7.grpc-hello-server
 
 Demo of grpc with Java.
+###### Compilation Error (pom.xml shows error with execution)
+```
+1. mvn install:install-file -Dpackaging=jar -DgeneratePom=true  -DgroupId=com.google.protobuf   -DartifactId=protobuf-java   -Dfile=ext/protobuf-java-2.5.0.jar -Dversion=2.5.0
+2. mvn install:install-file -DgroupId=com.google.protobuf -DartifactId=protoc -Dversion=3.12.1 -Dclassifier=${os.detected.classifier} -Dpackaging=exe -Dfile=ext/protoc-3.12.1-windows-x86_64.exe
+3. mvn install:install-file -DgroupId=io.grpc -DartifactId=protoc-gen-grpc-java -Dversion=1.31.0 -Dclassifier=windows-x86_64 -Dpackaging=exe -Dfile=ext/protoc-gen-grpc-java-1.31.0-windows-x86_64.exe
+```
 * [Reference](https://codelabs.developers.google.com/codelabs/cloud-grpc-java/index.html#0)
 
 ## 8.web-server
@@ -67,6 +74,6 @@ Note: Android application was designed for Android 7.0 so it may warn you on new
 
 ## Authors
 
-* **Ashish Parashram Tulsankar** - *Initial work* - [JavaCodeGround](https://github.com/AshishTulsankar28/JavaCodeGround/)
+***Ashish Parashram Tulsankar*** - *Initial work* - [JavaCodeGround](https://github.com/AshishTulsankar28/JavaCodeGround/)
 
 
