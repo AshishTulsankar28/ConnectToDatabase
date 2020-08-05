@@ -24,4 +24,5 @@ message HelloResponse {
 service GreetingService {
   // Define a RPC operation
   rpc greeting(HelloRequest) returns (HelloResponse);
+  rpc responsiveGreets(HelloRequest) returns (stream HelloResponse);
 }

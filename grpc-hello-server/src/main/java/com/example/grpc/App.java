@@ -19,7 +19,7 @@ public class App
         server.start();
 
         // Server threads are running in the background.
-        System.out.println("Server started");
+        System.out.println("Server started !");
         // Don't exit the main thread. Wait until server is terminated.
         server.awaitTermination();
     }
