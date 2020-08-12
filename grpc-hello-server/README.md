@@ -1,0 +1,26 @@
+## gRPC
+
+Implementation of gRPC framework using Java
+
+###### Compilation Error (pom.xml shows error with execution)
+```
+Rebuild   : mvn -DskipTests package		
+Run Server: mvn -DskipTests package exec:java -Dexec.mainClass=com.example.grpc.App
+Run Client: mvn -DskipTests package exec:java -Dexec.mainClass=com.example.grpc.Client
+
+1. mvn install:install-file -Dpackaging=jar -DgeneratePom=true  -DgroupId=com.google.protobuf   -DartifactId=protobuf-java   -Dfile=ext/protobuf-java-2.5.0.jar -Dversion=2.5.0
+2. mvn install:install-file -DgroupId=com.google.protobuf -DartifactId=protoc -Dversion=3.12.1 -Dclassifier=${os.detected.classifier} -Dpackaging=exe -Dfile=ext/protoc-3.12.1-windows-x86_64.exe
+3. mvn install:install-file -DgroupId=io.grpc -DartifactId=protoc-gen-grpc-java -Dversion=1.31.0 -Dclassifier=windows-x86_64 -Dpackaging=exe -Dfile=ext/protoc-gen-grpc-java-1.31.0-windows-x86_64.exe
+```
+
+
+## See
+
+* [Java Guide](https://www.grpc.io/docs/languages/java/basics/)
+* [Issue References](https://github.com/netty/netty/issues/7817) - Netty behaviour
+* [Quick Start](https://codelabs.developers.google.com/codelabs/cloud-grpc-java/index.html#0) 
+
+
+
+
+

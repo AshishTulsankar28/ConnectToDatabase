@@ -3,7 +3,8 @@ package com.example.grpc;
 import io.grpc.*;
 
 /**
- * Hello world!
+ * Class represents the gRPC server
+ * @author Ashish Tulsankar
  *
  */
 public class App 
@@ -19,8 +20,9 @@ public class App
         server.start();
 
         // Server threads are running in the background.
-        System.out.println("Server started !");
-        // Don't exit the main thread. Wait until server is terminated.
+        System.out.println("gRPC server started successfully !");
+        
+        // Don't exit the main thread, Wait until server is terminated manually. Also see awaitTermination(long timeout, TimeUnit unit).
         server.awaitTermination();
     }
 }
