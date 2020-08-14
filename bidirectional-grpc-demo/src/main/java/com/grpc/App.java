@@ -3,15 +3,13 @@
  */
 package com.grpc;
 
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.util.concurrent.Executor;
 
-import com.google.common.util.concurrent.MoreExecutors;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
-import io.grpc.netty.NettyServerBuilder;
 
 /**
  * gRPC server
@@ -19,24 +17,27 @@ import io.grpc.netty.NettyServerBuilder;
  *
  */
 public class App {
+	private static Logger log = LogManager.getLogger(App.class);
 
-	private static Executor executor;
+	public static void main( String[] args ) throws Exception
+	{
 
-	public static void main(String[] args) throws IOException, InterruptedException {
-		NettyServerBuilder builder = NettyServerBuilder.forAddress(new InetSocketAddress("localhost", 8080));
-		executor = MoreExecutors.directExecutor();
-		builder.executor(executor);
-		Server server = builder.addService(new CallServiceGrpcImpl()).build();
+		Server server = ServerBuilder.forPort(8080)
+				.addService(new CallServiceGrpcImpl())
+				.build();
+
 
 		server.start();
-
-		System.out.println("Server has started");
-
+		log.info("gRPC server started successfully | Server Details:{}:{}",server.getListenSockets(),server.getPort());
+		
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			server.shutdown();
+			log.info("Shutting down server");
 		}));
-
+		
+		// Don't exit the main thread, Wait until server is terminated manually. Also see awaitTermination(long timeout, TimeUnit unit).
 		server.awaitTermination();
 	}
+
 
 }
