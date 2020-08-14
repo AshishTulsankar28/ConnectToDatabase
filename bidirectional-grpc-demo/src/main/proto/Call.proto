@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+//option java_multiple_files = false;
+option java_package = "com.grpc";
+option java_outer_classname = "BiDirectionalCallService";
+
+package com.grpc;
+
+service CallService {
+    rpc Connect (stream RequestCall) returns (stream ResponseCall);
+}
+
+message RequestCall {
+    string requestId = 1;
+    string req =2;
+}
+
+message ResponseCall {
+    string requestId = 1;
+    string resp=2;
+}
