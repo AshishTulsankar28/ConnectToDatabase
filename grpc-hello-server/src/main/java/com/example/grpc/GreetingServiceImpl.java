@@ -17,14 +17,15 @@ public class GreetingServiceImpl extends GreetingServiceGrpc.GreetingServiceImpl
 	public void greeting(GreetingServiceOuterClass.HelloRequest request,
 			StreamObserver<GreetingServiceOuterClass.HelloResponse> responseObserver) {
 
-		log.info("Basic streaming rpc | Request- "+request);
+		log.info("Received~ {}",request);
 
 		// You must use a builder to construct a new Protobuffer object as response
 		GreetingServiceOuterClass.HelloResponse response = GreetingServiceOuterClass.HelloResponse.newBuilder()
 				.setGreeting("Hello, " + request.getName())
 				.build();
-
+		
 		// Use responseObserver to send a single response back
+		log.info("Sending~ {}",response);		
 		responseObserver.onNext(response);
 
 		// When you are done, you must call onCompleted.
@@ -35,7 +36,7 @@ public class GreetingServiceImpl extends GreetingServiceGrpc.GreetingServiceImpl
 	public void responsiveGreets(GreetingServiceOuterClass.HelloRequest request,
 			StreamObserver<GreetingServiceOuterClass.HelloResponse> responseObserver) {
 
-		log.info("Server side streaming rpc | Request- "+request);
+		log.info("Received~ {}",request);
 
 		GreetingServiceOuterClass.HelloResponse response = GreetingServiceOuterClass.HelloResponse.newBuilder()
 				.setGreeting("Hey, " + request.getName())
@@ -43,8 +44,11 @@ public class GreetingServiceImpl extends GreetingServiceGrpc.GreetingServiceImpl
 
 
 		// Clients may invoke onNext at most once for server streaming calls, but may receive many onNext callback.
+		log.info("Sending~ {}",response);		
 		responseObserver.onNext(response);
+		log.info("Sending~ {}",response);
 		responseObserver.onNext(response);
+		log.info("Sending~ {}",response);
 		responseObserver.onNext(response);
 
 		// When you are done, you must call onCompleted.
@@ -70,7 +74,7 @@ public class GreetingServiceImpl extends GreetingServiceGrpc.GreetingServiceImpl
 		class OnReadyHandler implements Runnable {
 
 			/**
-			 * TODO understanding the implementation
+			 * TODO understanding the manual flow 
 			 *Guard against spurious onReady() calls caused by a race between onNext() and onReady(). If the transport
 			 *toggles isReady() from false to true while onNext() is executing, but before onNext() checks isReady(),
 			 *request(1) would be called twice - once by onNext() and once by the onReady() scheduled during onNext()'s
@@ -102,15 +106,15 @@ public class GreetingServiceImpl extends GreetingServiceGrpc.GreetingServiceImpl
 				try {
 					// Accept and enqueue the request.
 					String name = request.getName();
-					log.info("Received --> " + name);
+					log.info("Received~ {} ",request);
 
 					// Simulate server "work"
 					Thread.sleep(100);
 
 					// Send a response.
 					String message = "Hi " + name;
-					log.info(message+" <-- Sent");
 					HelloResponse reply = HelloResponse.newBuilder().setGreeting(message).build();
+					log.info("Sending~ {}",reply);
 					responseObserver.onNext(reply);
 
 					// Check the provided ServerCallStreamObserver to see if it is still ready to accept more messages.
@@ -138,14 +142,14 @@ public class GreetingServiceImpl extends GreetingServiceGrpc.GreetingServiceImpl
 			@Override
 			public void onError(Throwable t) {
 				// End the response stream if the client presents an error.
-				t.printStackTrace();
+				log.trace("onError~ {}",t);
 				responseObserver.onCompleted();
 			}
 
 			@Override
 			public void onCompleted() {
 				// Signal the end of work when the client ends the request stream.
-				log.info("Completed Streaming");
+				log.info("Streaming done");
 				responseObserver.onCompleted();
 			}
 
@@ -155,30 +159,29 @@ public class GreetingServiceImpl extends GreetingServiceGrpc.GreetingServiceImpl
 	@Override
 	public io.grpc.stub.StreamObserver<com.example.grpc.GreetingServiceOuterClass.HelloRequest> requestingGreets(
 			io.grpc.stub.StreamObserver<com.example.grpc.GreetingServiceOuterClass.HelloResponse> responseObserver) {
-		// TODO implementation in progress, sample code is runnable
-		
+			
 		StringBuilder sb=new StringBuilder(50);
 		return new StreamObserver<GreetingServiceOuterClass.HelloRequest>() {
 
 			@Override
 			public void onNext(HelloRequest value) {
-				// TODO read requests from client
 				sb.append(value.getName());
-				log.info("Reading is in progress "+value.getName());
+				log.info("Received~ {} "+value);
 			}
 
 			@Override
 			public void onError(Throwable t) {
-				t.printStackTrace();
+				log.trace("onError~ {}",t);
 				responseObserver.onCompleted();
 			}
 
 			@Override
 			public void onCompleted() {
-				// TODO build response & send it to client as single response
+				
 				GreetingServiceOuterClass.HelloResponse response = GreetingServiceOuterClass.HelloResponse.newBuilder()
-						.setGreeting("Built response- "+sb.toString())
+						.setGreeting(sb.toString())
 						.build();
+				log.info("Sending~ {} ",response);
 				responseObserver.onNext(response);
 				responseObserver.onCompleted();
 			}
