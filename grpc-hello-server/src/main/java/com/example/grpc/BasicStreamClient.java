@@ -18,6 +18,11 @@ import io.grpc.ManagedChannelBuilder;
  */
 public class BasicStreamClient {
 	private static Logger log = LogManager.getLogger(BasicStreamClient.class);
+	private GreetingServiceGrpc.GreetingServiceBlockingStub stub;
+
+	public BasicStreamClient(ManagedChannel channel) {
+		stub = GreetingServiceGrpc.newBlockingStub(channel);
+	}
 
 	public static void main( String[] args ) throws Exception
 	{
@@ -26,18 +31,22 @@ public class BasicStreamClient {
 		final ManagedChannel channel = ManagedChannelBuilder.forTarget("localhost:8080").usePlaintext().build();
 		log.info("*** Basic Streaming RPC ***");
 
-		GreetingServiceGrpc.GreetingServiceBlockingStub stub = GreetingServiceGrpc.newBlockingStub(channel);
+        BasicStreamClient client = new BasicStreamClient(channel);
+        client.greeting("Ashish");
+		
+		channel.shutdown();
+		channel.awaitTermination(30, TimeUnit.SECONDS);
+	}
 
+	public void greeting(String name) {
 		GreetingServiceOuterClass.HelloRequest request =GreetingServiceOuterClass.HelloRequest.newBuilder()
-				.setName("Ashish")
+				.setName(name)
 				.build();
+		
 		log.info("Sending~ {} ",request.getName());
 		// Invoke method on server & get response
 		GreetingServiceOuterClass.HelloResponse response = stub.greeting(request);
 
 		log.info("Received~ {} ",response);
-		
-		channel.shutdown();
-		channel.awaitTermination(30, TimeUnit.SECONDS);
 	}
 }
