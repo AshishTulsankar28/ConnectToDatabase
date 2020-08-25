@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <changeSet author="admin" id="1">
+    <preConditions onFail="MARK_RAN" >
+      <not>
+        <tableExists tableName="student"/>
+      </not>
+    </preConditions>
+        <createTable tableName="student">
+            <column autoIncrement="true" name="id" type="INT(10)">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="firstName" type="VARCHAR(25)">
+                <constraints nullable="false"/>
+            </column>
+			<column name="lastName" type="VARCHAR(60)">
+                <constraints nullable="false"/>
+            </column>
+			<column name="dept" type="VARCHAR(25)"/>
+            <column name="address" type="VARCHAR(25)"/>
+        </createTable>
+        <rollback>
+            <dropTable tableName="student"/>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

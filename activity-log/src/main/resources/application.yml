@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: grpc-activity-server
+  liquibase:
+    change-log: classpath:/db/changelog/changelog-master.xml
+    database-change-log-lock-table: DATABASECHANGE_LOG_LOCK 
+    database-change-log-table: DATABASECHANGE_LOG
+  h2:
+    console:
+      enabled: true
+  kafka:
+    consumer:
+      bootstrap-servers: localhost:9092
+      group-id: kafka-consumer-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      bootstrap-servers: localhost:9092
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+server:
+  port: 8080
+grpc:
+  server:
+    port: 9090
+  client:
+    grpc-activity-server:
+      address: static://localhost:9090
+      enableKeepAlive: true
+      keepAliveWithoutCalls: true
+      negotiationType: plaintext

@@ -1,0 +1,93 @@
+syntax = "proto3";
+
+package com.example.grpc.v1;
+
+import "google/api/annotations.proto";
+
+option java_multiple_files = true;
+option java_package = "com.example.grpc.generated";
+option java_outer_classname = "StudentProto";
+
+service StudentService {
+
+  rpc checkConnection (GetStudentRequest) returns (GetStudentResponse) {
+  	option (google.api.http) = { get: "dummy/student/{id}" };
+  }
+
+  rpc getStudent (GetStudentRequest) returns (GetStudentResponse) {
+  	option (google.api.http) = { get: "/student/{id}" };
+  }
+  
+  rpc createStudent (CreateStudentRequest) returns (CreateStudentResponse) {
+    option (google.api.http) = { post: "/student" };
+  }
+  
+  rpc updateStudent (UpdateStudentRequest) returns (UpdateStudentResponse) {
+    option (google.api.http) = { put: "/student/{student.id}" };
+  }
+  
+  rpc deleteStudent (DeleteStudentRequest) returns (DeleteStudentResponse) {
+    option (google.api.http) = { delete: "/student/{id}" };
+  }
+  
+  rpc ListStudents (ListStudentsRequest) returns  (ListStudentsResponse) {
+  	option (google.api.http) = {
+  		get: "/student"
+  	};
+  }
+  
+  rpc publishChanges (CreateStudentRequest) returns (CreateStudentResponse) {
+    option (google.api.http) = { post: "kafka/publish" };
+  }
+}
+
+message Student {
+  int32  id = 1;
+  string first_name = 2;
+  string last_name = 3;
+  string dept = 4;
+  string address = 5; 
+}
+
+message GetStudentRequest {
+	int32 id = 1;
+}
+
+message GetStudentResponse {
+	Student student = 1;
+	string extraMsg = 2;
+}
+
+message CreateStudentRequest {
+	Student student = 1;
+}
+
+message CreateStudentResponse {
+	Student student = 1;
+	int32 id = 2;
+}
+
+message UpdateStudentRequest {
+	Student student = 1;
+}
+
+message UpdateStudentResponse {
+	Student student = 1;
+}
+
+message DeleteStudentRequest {
+	int32 id = 1;
+}
+
+message DeleteStudentResponse {
+}
+
+message ListStudentsRequest {
+}
+
+message ListStudentsResponse {
+	repeated Student student = 1;
+	string total_count = 2;
+  	string total_pages = 3;
+	string next_page_token = 4;
+}
