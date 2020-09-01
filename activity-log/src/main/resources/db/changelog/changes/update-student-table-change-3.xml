@@ -6,13 +6,13 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
     http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
-    <changeSet author="admin" id="3">
-        <preConditions>
+    <changeSet author="admin"  id="3">
+        <preConditions onFail="WARN" onFailMessage="Not H2 database">
             <dbms type="h2"/>
         </preConditions>
         <update tableName="student">
             <column name="address" value="Pune"/>
-            <where> id = '4'</where>
+            <where> firstName = 'Abhishek'</where>
         </update>
     </changeSet>
 </databaseChangeLog>

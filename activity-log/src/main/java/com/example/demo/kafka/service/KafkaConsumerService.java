@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.example.demo.service;
+package com.example.demo.kafka.service;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 public class KafkaConsumerService {
 	private static Logger log= LogManager.getLogger(KafkaConsumerService.class);
 	
-	@KafkaListener(topics= {"kafka-test-topic"},groupId = "kafka-consumer-group")
+	@KafkaListener(topics= {"student-activity-log"},groupId = "kafka-consumer-group")
 	public void consumeMsg(String msg) {
 		log.info("Message Received by kafka consumer {} ",msg);
 	}

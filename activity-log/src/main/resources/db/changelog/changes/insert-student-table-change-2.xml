@@ -1,39 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <databaseChangeLog
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
     http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
-    <changeSet author="admin" id="2">
-        <insert tableName="student">
-            <column name="id" valueNumeric="1"/>
-            <column name="firstName" value="Ashish"/>
-            <column name="lastName" value="Tulsankar"/>
-            <column name="dept" value="IT"/>
-            <column name="address" value="IN"/>
-        </insert>
-        <insert tableName="student">
-            <column name="id" valueNumeric="2"/>
-            <column name="firstName" value="Sanket"/>
-            <column name="lastName" value="Tulsankar"/>
-            <column name="dept" value="MECH"/>
-            <column name="address" value="MH"/>
-        </insert>
-        <insert tableName="student">
-            <column name="id" valueNumeric="3"/>
-            <column name="firstName" value="Abhishek"/>
-            <column name="lastName" value="Deshpande"/>
-            <column name="dept" value="MARINE"/>
-            <column name="address" value="SATARA"/>
-        </insert>
-        <insert tableName="student">
-            <column name="id" valueNumeric="4"/>
-            <column name="firstName" value="Akshay"/>
-            <column name="lastName" value="Turate"/>
-            <column name="dept" value="PROD"/>
-            <column name="address" value="INDIA"/>
-        </insert>
-    </changeSet>
+	<changeSet author="admin" id="2">
+		<comment>Clear existing data</comment>
+		<sql>
+			TRUNCATE TABLE student
+		</sql>
+		<insert tableName="student">
+			<column name="id" valueNumeric="1" />
+			<column name="firstName" value="Ashish" />
+			<column name="lastName" value="Tulsankar" />
+			<column name="dept" value="IT" />
+			<column name="address" value="IN" />
+		</insert>
+		<insert tableName="student">
+			<column name="id" valueNumeric="2" />
+			<column name="firstName" value="Sanket" />
+			<column name="lastName" value="Tulsankar" />
+			<column name="dept" value="MECH" />
+			<column name="address" value="MH" />
+		</insert>
+		<insert tableName="student">
+			<column name="id" valueNumeric="3" />
+			<column name="firstName" value="Abhishek" />
+			<column name="lastName" value="Deshpande" />
+			<column name="dept" value="MARINE" />
+			<column name="address" value="SATARA" />
+		</insert>
+		<insert tableName="student">
+			<column name="id" valueNumeric="4" />
+			<column name="firstName" value="Akshay" />
+			<column name="lastName" value="Turate" />
+			<column name="dept" value="PROD" />
+			<column name="address" value="INDIA" />
+		</insert>
+	</changeSet>
 </databaseChangeLog>

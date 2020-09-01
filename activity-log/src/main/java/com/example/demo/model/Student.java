@@ -3,6 +3,7 @@
  */
 package com.example.demo.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -24,15 +25,24 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "Student")
+@Table(name = "Student",schema = "PUBLIC")
 public class Student {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
 	private int id;
+	
+	@Column(name = "firstName",length = 60)
 	private String firstName;
+	
+	@Column(name = "lastName",length = 100)
 	private String lastName;
+	
+	@Column(name = "dept",length = 50)
 	private String dept;
+	
+	@Column(name = "address",length = 150)
 	private String address;
 
 }

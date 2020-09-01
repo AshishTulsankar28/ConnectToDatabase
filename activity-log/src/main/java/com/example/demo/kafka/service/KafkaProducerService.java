@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.example.demo.service;
+package com.example.demo.kafka.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties.Producer;
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class KafkaProducerService {
 
-	private static final String KAFKA_TOPIC = "kafka-test-topic";
+	private static final String KAFKA_TOPIC = "student-activity-log";
 	
 	@Autowired
 	KafkaTemplate<String, String> kafkaTemplate;

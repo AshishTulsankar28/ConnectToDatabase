@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.example.demo.model;
+package com.example.demo.constants;
 
 /**
  * Constants used for configuring data source
@@ -11,9 +11,9 @@ package com.example.demo.model;
 public class DB_CONSTANTS {
 
 	public static final String MYSQL_DRIVER = "com.mysql.cj.jdbc.Driver";
-	public static final String MYSQL_URL = "jdbc:mysql://localhost:3306/ashish";
+	public static final String MYSQL_URL = "jdbc:mysql://localhost:3306/public";
 	public static final String MYSQL_USER="root";
-	public static final String MYSQL_PWD = "root";
+	public static final String MYSQL_PWD = "pa$$word";
 	
     public static final String H2_DRIVER = "org.h2.Driver";
 	public static final String H2_URL = "jdbc:h2:mem:test";

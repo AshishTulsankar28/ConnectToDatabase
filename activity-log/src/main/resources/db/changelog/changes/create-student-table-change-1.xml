@@ -6,14 +6,14 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
     http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
-    <changeSet author="admin" id="1">
-    <preConditions onFail="MARK_RAN" >
+    <changeSet author="admin" id="1" >
+    <preConditions onFail="MARK_RAN" onFailMessage="Table already exist">
       <not>
         <tableExists tableName="student"/>
       </not>
     </preConditions>
         <createTable tableName="student">
-            <column autoIncrement="true" name="id" type="INT(10)">
+            <column autoIncrement="true" incrementBy="1" startWith="100" name="id" type="INT(10)">
                 <constraints primaryKey="true"/>
             </column>
             <column name="firstName" type="VARCHAR(25)">

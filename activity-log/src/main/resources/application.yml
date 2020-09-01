@@ -2,16 +2,16 @@ spring:
   application:
     name: grpc-activity-server
   liquibase:
+    liquibase-schema: PUBLIC
     change-log: classpath:/db/changelog/changelog-master.xml
     database-change-log-lock-table: DATABASECHANGE_LOG_LOCK 
     database-change-log-table: DATABASECHANGE_LOG
   h2:
     console:
-      enabled: true
+      enabled: false
   kafka:
     consumer:
       bootstrap-servers: localhost:9092
-      group-id: kafka-consumer-group
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
